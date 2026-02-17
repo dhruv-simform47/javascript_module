@@ -15,38 +15,65 @@
         console.log("Hii,Greetings..!");
         console.log("You are on Result Page..to see result Login First..");
         let username = prompt("Enter Username:-");
-        let psw = prompt("Enter Password:-");
-        if (username === un) {
-            if (psw === pw) {
-                let grade;
-                alert("Login Successful..");
-                alert("Enter Your Percentage to See Your Class:-");
-                let Percentage = prompt("Your percentage:=");
-                if (Percentage >= 90) {
-                    grade = "Distinction";
+        if (username === null) 
+        {
+            alert("User cancel login");
+        }
+        else 
+        {
+            let psw = prompt("Enter Password:-");
+            //if user cancel or dont enter anything null is stored
+            if (psw === null) 
+            {
+                alert("User cancel login");
+            }
+                else
+                {
+                if (username !== un) {
+                    alert("Username is Invalid!");
                 }
-                else if (Percentage >= 75) {
-                    grade = "First class";
-                }
-                else if (Percentage >= 55) {
-                    grade = "second class";
-                }
-                else if (Percentage >= 45) {
-                    grade = "Pass";
+                else if (psw !== pw) {
+                    alert("Incorrect Password,Try Again!");
                 }
                 else {
-                    grade = "Fail";
+                    let grade = null;
+                    alert("Login Successful..");
+                    alert("Enter Your Percentage to See Your Class:-");
+                    let Percentage = Number(prompt("Your percentage:="));
+                    
+                    //prompt return string so we have to convert it to Number Explicitly
 
+                    if (isNaN(Percentage)) {
+                        alert("Enter Valid Percentage!");
+                    }
+                    else {
+                        if (Percentage < 0 || Percentage > 100) {
+                            alert("Error!not a valid Percentage!");
+                        }
+                        else {
+                            if (Percentage <= 35) {
+                                grade = "Fail";
+                            }
+                            else if (Percentage <= 55) {
+                                grade = "Pass class";
+                            }
+                            else if (Percentage <= 75) {
+                                grade = "second class";
+                            }
+                            else if (Percentage <= 85) {
+                                grade = "First Class";
+                            }
+                            else {
+                                grade = "Distinction";
+
+                            }
+
+                            alert(`${username} got ${grade} for percentage ${Percentage}`);
+                        }
+                    }
                 }
-                alert(`${username} got ${grade} for percentage ${Percentage}`);
             }
-            else{
-                alert("Your Password is wrong..Try Again!");
-            }
-
-        }else{
-            alert("Username Invalid..");
-        }
+        } 
     </script>
 </body>
 

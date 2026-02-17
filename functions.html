@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>This is js file look in console for output.</h3>
+    <script>
+
+
+        const un = "Dhruv";
+        const pw = "12345";
+        let isLoggedin = false;
+        function checkLogin(user, psw) {
+            let flag = false;
+            if (user !== un) {
+                alert("Username is Invalid!");
+            }
+            else if (psw !== pw) {
+                alert("Incorrect Password,Try Again!");
+            }
+            else {
+                flag = true;
+            }
+            return flag;
+        }
+
+        function calculateGrade(Percentage) {
+            let grade;
+            if (Percentage <= 35) {
+                grade = "Fail";
+            }
+            else if (Percentage <= 55) {
+                grade = "Pass class";
+            }
+            else if (Percentage <= 75) {
+                grade = "second class";
+            }
+            else if (Percentage <= 85) {
+                grade = "First Class";
+            }
+            else {
+                grade = "Distinction";
+
+            }
+            return grade;
+        }
+
+        function greet()
+        {
+
+        console.log("Hii,Greetings..!");
+        console.log("You are on Result Page..to see result Login First..");
+        }
+        
+
+
+
+        greet();
+        let username = prompt("Enter Username:-");
+        if (username === null) {
+            alert("User cancel login");
+        }
+        else {
+            let psw = prompt("Enter Password:-");
+            //if user cancel or dont enter anything null is stored
+            if (psw === null) {
+                alert("User cancel login");
+            }
+            else {
+                isLoggedin = checkLogin(username, psw);
+            }
+            if (isLoggedin) {
+                let grade = null;
+                alert("Login Successful..");
+                alert("Enter Your Percentage to See Your Class:-");
+                let Percentage = Number(prompt("Your percentage:="));
+
+                //prompt return string so we have to convert it to Number Explicitly
+
+                if (isNaN(Percentage)) {
+                    alert("Enter Valid Percentage!");
+                }
+                else {
+                    if (Percentage < 0 || Percentage > 100) {
+                        alert("Error!not a valid Percentage!");
+                    }
+                    else {
+                        grade=calculateGrade(Percentage);
+                        alert(`${username} got ${grade} for percentage ${Percentage}`);
+                    }
+                }
+            }
+
+        }
+
+    </script>
+</body>
+
+</html>

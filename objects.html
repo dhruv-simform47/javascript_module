@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h3>This is js file for objects,loops,array look in console for output.</h3>
+    <script>
+        // Create a User Object
+        let user={
+            name:"dhruv",
+            age:22,
+            isStudent:true,
+            skills:['python','php','java','flask'] 
+        };
+
+        alert(`${user.name} have skills like ${user.skills[0]}`);
+
+
+        //student array which have name and marks
+
+        const student =[
+            {name:"Dhruv",marks:45},
+            {name:"dev",marks:55}
+        ];
+
+    //    1-way of display data
+        // alert(`${student[0].name} got ${student[0].marks} `);
+        // alert(`${student[1].name} got ${student[1].marks} `);
+
+        //2nd way optimise 
+        student.forEach(
+            (stu)=>{
+                console.log(`${stu.name} got ${stu.marks}`);
+            }
+        );
+
+    </script>
+</body>
+</html>
