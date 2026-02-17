@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>This is js file look in console for output.</h3>
+    <script>
+        const un = "Dhruv";
+        const pw = "12345";
+        console.log("Hii,Greetings..!");
+        console.log("You are on Result Page..to see result Login First..");
+        let username = prompt("Enter Username:-");
+        let psw = prompt("Enter Password:-");
+        if (username === un) {
+            if (psw === pw) {
+                let grade;
+                alert("Login Successful..");
+                alert("Enter Your Percentage to See Your Class:-");
+                let Percentage = prompt("Your percentage:=");
+                if (Percentage >= 90) {
+                    grade = "Distinction";
+                }
+                else if (Percentage >= 75) {
+                    grade = "First class";
+                }
+                else if (Percentage >= 55) {
+                    grade = "second class";
+                }
+                else if (Percentage >= 45) {
+                    grade = "Pass";
+                }
+                else {
+                    grade = "Fail";
+
+                }
+                alert(`${username} got ${grade} for percentage ${Percentage}`);
+            }
+            else{
+                alert("Your Password is wrong..Try Again!");
+            }
+
+        }else{
+            alert("Username Invalid..");
+        }
+    </script>
+</body>
+
+</html>
