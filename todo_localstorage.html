@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List </title>
+    <style>
+        .container {
+            background-color: rgb(241, 237, 230);
+            border: 1px solid grey;
+            width: 60%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        #task {
+            width: 50%;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1rem;
+            padding: 5px 10px;
+        }
+
+        #addbtn {
+            background-color: lightblue;
+            padding: 5px 10px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #showbtn {
+            background-color: rgb(65, 207, 65);
+            padding: 5px 10px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #clear {
+            background-color: rgb(0, 0, 0);
+            padding: 5px 10px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+        }
+
+        #message {
+            display: none;
+            background-color: black;
+            color: white;
+            font-size: 1rem;
+            border: 1px dotted white;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <center>
+            <h1>Todo-List</h1>
+        </center>
+        <p id="message"></p>
+        <form action="#">
+            <label for="task">Enter Task Name:</label> <br>
+            <input type="text" id="task"> <br> <br>
+            <input id="addbtn" type="button" value="Add" onclick="addTask()">
+            &nbsp; &nbsp;
+            <button id="showbtn" onclick="display()">Display Task</button>
+            &nbsp; &nbsp;
+            <button id="clear" onclick="cleartodo()">Clear-Todo</button>
+        </form>
+
+        <br><br>
+        <p>
+        <h2>Todo-Task:</h2>
+        <p id="tasklist"></p>
+        </p>
+    </div>
+
+    <script>
+        let tasks;
+        // const counter_key="tcount";
+        let task_key = "task_list";
+        function getTask() {
+            return JSON.parse(localStorage.getItem(task_key)) || [];
+        }
+
+        function addTask() {
+            let tasks = getTask();
+            let input_task = document.getElementById("task");
+            tasks.push(input_task.value);
+            localStorage.setItem(task_key, JSON.stringify(tasks));
+            let msg = document.getElementById("message");
+
+            input_task.value = "";
+            msg.style.display = "block";
+            msg.innerText = `Task added Successfully`;
+        }
+
+        function display() {
+            let tasks = getTask();
+
+
+            let list = document.getElementById("tasklist");
+            list.innerHTML = "";
+
+
+            tasks.forEach((task, index) => {
+                list.innerHTML += `[ ${index + 1} ] ${task} <br>`;
+
+            })
+
+        }
+
+        function cleartodo() {
+            localStorage.clear();
+            let msg = document.getElementById("message");
+            msg.style.display = "block";
+            let list = document.getElementById("tasklist");
+            list.innerHTML = "";
+            msg.innerText = `Todo Cleared`;
+        }
+
+
+    </script>
+</body>
+
+</html>
