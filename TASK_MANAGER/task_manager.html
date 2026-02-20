@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet"
+        integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body onload="setup()">
+
+    <div
+        class="container bg-light border border-secondary-subtle border-3 border-top-0 border-bottom-0 p-2 bg-opacity-10 ">
+        <header class="h2  border-bottom border-2 py-2 text-center  bg-warning text-white">Task Manager</header>
+        <div class="layout row ">
+            <div class="functions col-2 align-content-center justify-item-center">
+                <button type="button" class="btn btn-primary p-2 my-2 w-75" id="btnNewTask" onclick="addTaskPage()">New
+                    Task </button>
+                <button type="button" class="btn btn-info p-2 my-2 w-75 " id="btnShowTask" onclick="showTaskPage()">My
+                    Tasks</button>
+
+            </div>
+            <div class="content col-10">
+                <!-- Add Task Form Start -->
+                <div class="container border-start border-2 border-dotted " id="addForm">
+                    <form action="">
+                        <fieldset
+                            class="form-control border-0 bg-secondary bg-opacity-10 border border-info border-start-0 rounded-end">
+                            <legend class="text-center bg-secondary-subtle p-2 font-monospace">Add Task Form</legend>
+                            <label for="addTitle" class="form-label mt-2">Task Name:</label>
+                            <input type="text" name="addTitle" id="addTitle"
+                                class="form-control w-75 border border-dark-subtle border-dotted">
+                            <label for="addDesc" class="form-label mt-2">Description:</label>
+                            <textarea name="addDesc" id="addDesc" cols="30" rows="6"
+                                class="form-control border-dark-subtle w-75 border border-dotted"></textarea>
+                            <div class="row mt-2">
+                                <div class="priority col-4">
+                                    <label for="addPriority" class="form-label">Priority</label>
+                                    <select name="addPriority" id="addPriority"
+                                        class="form-select border-dark-subtle border border-dotted">
+                                        <!-- <option value="none">Select</option> -->
+                                    </select>
+                                </div>
+                                <div class="status col-4">
+                                    <label for="addStatus" class="form-label">Status</label>
+                                    <select name="addStatus" id="addStatus"
+                                        class="form-select border-dark-subtle border border-dotted">
+                                        <!-- <option value="none">Select</option> -->
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <button type="submit" id="btnAdd" onclick="addTask()"
+                                class="mt-4 px-5 btn btn-success border border-dotted">Add</button>
+
+
+
+                        </fieldset>
+
+                    </form>
+                </div>
+                <!-- Add Task Form End  -->
+                <!-- Display Task Block Start -->
+                <div class="container border-start border-2 border-dotted" id="showTask" >
+                    <p class="text-center bg-secondary-subtle p-2 h4 font-monospace">Task List</p>
+
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Priority</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="taskList">
+                            <tr>
+                                <td scope="row" id="tid">1</td>
+                                <td id="tTitle">Mark</td>
+                                <td id="tStatus">Done</td>
+                                <td id="tPriority">Low</td>
+                                <td id="tEdit"><button id="btnEdit" class="btn btn-warning">Edit</button></td>
+                                <td id="tDelete"><button id="btnDelete" class="btn btn-danger">Delete</button></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Display Task Block End  -->
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+<script>
+    function setup()
+    {
+            document.getElementById("showTask").style.display="none";
+            document.getElementById("addForm").style.display="block";
+    }
+   
+    const task_key="StoredTasks"
+    const task_array=[];
+    const enumStatus=Object.freeze(
+        {
+        NOT_STARTED:"not started",
+        IN_PROGRESS : "in progress",
+        BLOCKED:"blocked",
+        COMPLETED : "completed"
+        }
+    );
+    const enumPriority=Object.freeze(
+        {
+            HIGH : "high",
+            MEDIUM :"medium",
+            LOW : "low"
+        }
+    );
+
+        class Task{
+            constructor(id,title,desc,Newstatus,Newpriority)
+            {
+            this.id=id;
+            this.title=title;
+            this.desc=desc;
+            this.status=Newstatus;
+            this.priority=Newpriority
+            this.createdAt=new Date();  
+            }
+
+            
+            // setter method for status
+            set status(Newstatus)
+            {
+                if(!Object.values(enumStatus).includes(Newstatus))
+            {
+                throw new Error("invalid status");
+            }
+                this._status=Newstatus;
+                this.updatedAt=new Date();
+
+            }
+            // setter method for priority 
+
+            set priority(Newpriority)
+            {
+                if(!Object.values(enumPriority).includes(Newpriority))
+            {
+                throw new Error("invalid piority..");   
+            }
+                this._priority=priority
+                this.updatedAt=new Date();
+
+            }
+        }
+        function getTask()
+        {
+            return JSON.parse(localStorage.getItem(task_key)) || [];
+            
+        }
+        function generateId()
+        {
+            let t_array=getTask();
+            return (Number(task_array[task_array.length-1].id)+1);
+        }
+       function addTask()
+        {   
+            task_array=getTask();
+            const id=generateId();
+            const inp_title=document.getElementById("addTitle").value;
+            const inp_desc=document.getElementById("addDesc").value;
+            const inp_status=document.getElementById("addStatus").value;
+            const inp_Priority=document.getElementById("addPriority").value;
+            const new_task=Task()
+
+        }
+        // DOM Handling Script
+        function addTaskPage()
+        {   
+            document.getElementById("showTask").style.display="none";
+            document.getElementById("addForm").style.display="block";
+        }
+        function showTaskPage()
+        {
+            document.getElementById("addForm").style.display="none";
+            document.getElementById("showTask").style.display="block";
+        }
+
+</script>
+
+
+
+
+
+        <!-- here we have tasklis structure -->
+    <!-- <tr>
+        <td scope="row" id="tid">1</td>
+        <td id="tTitle">Mark</td>
+        <td id="tStatus">Done</td>
+        <td id="tPriority">Low</td>
+        <td id="tEdit"><button id="btnEdit" class="btn btn-warning">Edit</button></td>
+        <td id="tDelete"><button id="btnDelete" class="btn btn-danger">Delete</button></td>
+    </tr> -->
+</body>
+
+</html>
