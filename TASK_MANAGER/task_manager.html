@@ -65,8 +65,48 @@
                     </form>
                 </div>
                 <!-- Add Task Form End  -->
+                <!-- Edit Task Form Start -->
+                <div class="container border-start border-2 border-dotted " id="editForm">
+                    <form action="">
+                        <fieldset
+                            class="form-control border-0 bg-secondary bg-opacity-10 border border-info border-start-0 rounded-end">
+                            <legend class="text-center bg-secondary-subtle p-2 font-monospace">Edit Task Form</legend>
+                            <label for="editTitle" class="form-label mt-2">Task Name:</label>
+                            <input type="text" name="editTitle" id="editTitle"
+                                class="form-control w-75 border border-dark-subtle border-dotted">
+                            <label for="editDesc" class="form-label mt-2">Description:</label>
+                            <textarea name="editDesc" id="editDesc" cols="30" rows="6"
+                                class="form-control border-dark-subtle w-75 border border-dotted"></textarea>
+                            <div class="row mt-2">
+                                <div class="priority col-4">
+                                    <label for="editPriority" class="form-label">Priority</label>
+                                    <select name="editPriority" id="editPriority"
+                                        class="form-select border-dark-subtle border border-dotted">
+                                        <!-- <option value="none">Select</option> -->
+                                    </select>
+                                </div>
+                                <div class="status col-4">
+                                    <label for="editStatus" class="form-label">Status</label>
+                                    <select name="editStatus" id="editStatus"
+                                        class="form-select border-dark-subtle border border-dotted">
+                                        <!-- <option value="none">Select</option> -->
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <button type="submit" id="btnEdit"
+                                class="mt-4 px-5 btn btn-secondary border border-dotted">Update</button>
+
+
+
+                        </fieldset>
+
+                    </form>
+                </div>
+                <!-- Edit Task Form End  -->
                 <!-- Display Task Block Start -->
-                <div class="container border-start border-2 border-dotted" id="showTask" >
+                <div class="container border-start border-2 border-dotted" id="showTask">
                     <p class="text-center bg-secondary-subtle p-2 h4 font-monospace">Task List</p>
 
                     <table class="table">
@@ -76,19 +116,21 @@
                                 <th scope="col">Title</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Priority</th>
+                                <th scope="col">Created </th>
+                                <th scope="col">Updated</th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody id="taskList">
-                            <tr>
+                            <!-- <tr>
                                 <td scope="row" id="tid">1</td>
                                 <td id="tTitle">Mark</td>
                                 <td id="tStatus">Done</td>
                                 <td id="tPriority">Low</td>
                                 <td id="tEdit"><button id="btnEdit" class="btn btn-warning">Edit</button></td>
                                 <td id="tDelete"><button id="btnDelete" class="btn btn-danger">Delete</button></td>
-                            </tr>
+                            </tr> -->
 
                         </tbody>
                     </table>
@@ -105,115 +147,236 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
 
-<script>
-    function setup()
-    {
-            document.getElementById("showTask").style.display="none";
-            document.getElementById("addForm").style.display="block";
-    }
-   
-    const task_key="StoredTasks"
-    const task_array=[];
-    const enumStatus=Object.freeze(
-        {
-        NOT_STARTED:"not started",
-        IN_PROGRESS : "in progress",
-        BLOCKED:"blocked",
-        COMPLETED : "completed"
+    <script>
+        function setup() {
+            showTaskPage();
         }
-    );
-    const enumPriority=Object.freeze(
-        {
-            HIGH : "high",
-            MEDIUM :"medium",
-            LOW : "low"
-        }
-    );
 
-        class Task{
-            constructor(id,title,desc,Newstatus,Newpriority)
+
+
+        const task_key = "StoredTasks"
+        let task_array = [];
+        const enumStatus = Object.freeze(
             {
-            this.id=id;
-            this.title=title;
-            this.desc=desc;
-            this.status=Newstatus;
-            this.priority=Newpriority
-            this.createdAt=new Date();  
+                NOT_STARTED: "not started",
+                IN_PROGRESS: "in progress",
+                BLOCKED: "blocked",
+                COMPLETED: "completed"
+            }
+        );
+        const enumPriority = Object.freeze(
+            {
+                HIGH: "high",
+                MEDIUM: "medium",
+                LOW: "low"
+            }
+        );
+
+        class Task {
+            constructor(id, title, desc, Newstatus, Newpriority) {
+                this.id = id;
+                this.title = title;
+                this.desc = desc;
+                this.status = Newstatus;
+                this.priority = Newpriority
+                this.createdAt = new Date();
             }
 
-            
+
             // setter method for status
-            set status(Newstatus)
-            {
-                if(!Object.values(enumStatus).includes(Newstatus))
-            {
-                throw new Error("invalid status");
-            }
-                this._status=Newstatus;
-                this.updatedAt=new Date();
+            set status(Newstatus) {
+                if (!Object.values(enumStatus).includes(Newstatus)) {
+                    throw new Error("invalid status");
+                }
+                this._status = Newstatus;
+                this.updatedAt = new Date();
 
             }
             // setter method for priority 
 
-            set priority(Newpriority)
-            {
-                if(!Object.values(enumPriority).includes(Newpriority))
-            {
-                throw new Error("invalid piority..");   
-            }
-                this._priority=priority
-                this.updatedAt=new Date();
+            set priority(Newpriority) {
+                if (!Object.values(enumPriority).includes(Newpriority)) {
+                    throw new Error("invalid piority..");
+                }
+                this._priority = Newpriority
+                this.updatedAt = new Date();
 
             }
         }
-        function getTask()
-        {
+        function getTask() {
             return JSON.parse(localStorage.getItem(task_key)) || [];
-            
+
         }
-        function generateId()
-        {
-            let t_array=getTask();
-            return (Number(task_array[task_array.length-1].id)+1);
+        function generateId() {
+            let t_array = getTask();
+            if (task_array.length == 0) return 1;
+            return (Number(task_array[task_array.length - 1].id) + 1);
         }
-       function addTask()
-        {   
+        function addTask() {
+            task_array = getTask();   //here we have array of task objects
+            const id = generateId();
+            const inp_title = document.getElementById("addTitle").value;
+            const inp_desc = document.getElementById("addDesc").value;
+            const inp_status = document.getElementById("addStatus").value;
+            const inp_Priority = document.getElementById("addPriority").value;
+            const new_task = new Task(id, inp_title, inp_desc, inp_status, inp_Priority);
+            task_array.push(new_task);
+            //data save back to the storage
+            localStorage.setItem(task_key, JSON.stringify(task_array));
+            console.log(localStorage.getItem(task_key));
+            showTaskPage();
+        }
+        //Future: use of flag to know page is reloaded or not to reduce calling gettask every time for task_array
+        function editTask(pos) {
             task_array=getTask();
-            const id=generateId();
-            const inp_title=document.getElementById("addTitle").value;
-            const inp_desc=document.getElementById("addDesc").value;
-            const inp_status=document.getElementById("addStatus").value;
-            const inp_Priority=document.getElementById("addPriority").value;
-            const new_task=Task()
+            task_array[pos].title=document.getElementById("editTitle").value;
+            task_array[pos].desc=document.getElementById("editDesc").value;
+            task_array[pos]._status=document.getElementById("editStatus").value;
+            task_array[pos]._priority=document.getElementById("editPriority").value;
+            task_array[pos].updatedAt=new Date();
+
+            localStorage.setItem(task_key,JSON.stringify(task_array));
+            console.log("updated....");
+            showTaskPage();
+
 
         }
+
+
+
+
         // DOM Handling Script
-        function addTaskPage()
-        {   
-            document.getElementById("showTask").style.display="none";
-            document.getElementById("addForm").style.display="block";
+        function addTaskPage() {
+            document.getElementById("showTask").style.display = "none";
+            document.getElementById("editForm").style.display = "none";
+
+            document.getElementById("addForm").style.display = "block";
+            let status_op = document.getElementById("addStatus");
+            let priority_op = document.getElementById("addPriority");
+            //adding options for status input
+            for (let key in enumStatus) {
+                let option = document.createElement("option");
+                option.text = enumStatus[key].toUpperCase();
+                // console.log(typeof(enumStatus[key]));
+                option.value = enumStatus[key];
+                status_op.appendChild(option);
+            }
+            //adding options for priority input
+
+            for (let key in enumPriority) {
+                let option = document.createElement("option");
+                option.text = enumPriority[key].toUpperCase();
+
+                option.value = enumPriority[key];
+                priority_op.appendChild(option);
+            }
         }
-        function showTaskPage()
-        {
-            document.getElementById("addForm").style.display="none";
-            document.getElementById("showTask").style.display="block";
+
+
+        function showTaskPage() {
+            document.getElementById("addForm").style.display = "none";
+            document.getElementById("editForm").style.display = "none";
+
+
+            let arr_obj = getTask();
+
+            let tasklist_el = document.getElementById("taskList");
+
+
+            tasklist_el.innerHTML="";
+            arr_obj.forEach(obj => {
+                let tr_el = document.createElement("tr");
+                tr_el.innerHTML = `
+            <td scope="row">${obj.id}</td>
+        <td>${obj.title}</td>
+        <td>${obj._status}</td>
+        <td>${obj._priority}</td>
+        <td>${obj.createdAt}</td>
+        <td>${obj.updatedAt}</td>
+        <td ><button  class="btn btn-warning" onclick="editTaskForm(${obj.id})">Edit</button></td>
+        <td ><button  class="btn btn-danger" onclick="deleteTask(${obj.id})">Delete</button></td>
+            `;
+                tasklist_el.appendChild(tr_el);
+            });
+
+
+            document.getElementById("showTask").style.display = "block";
+
+
         }
 
-</script>
+
+        function editTaskForm(editid) {
+            document.getElementById("showTask").style.display = "none";
+            document.getElementById("addForm").style.display = "none";
+
+            //logic
+
+            let count = 0;
+            task_array = getTask();
+            let pos = task_array.reduce((index, value) => {
+
+                if (value.id == editid) {
+                    index = count;
+                }
+                else {
+                    count++;
+                }
+                return index;
+
+            }, -1);
+            if (pos == -1) {
+                throw new Error("Item To be Updated is not Stored!");
+            }
+            const edit_obj = task_array[pos];
+            document.getElementById("editTitle").value = edit_obj.title;
+        
+            document.getElementById("editDesc").value = edit_obj.desc;
+            
+            document.getElementById("btnEdit").setAttribute("onclick",`editTask(${pos})`);
+            let status_op = document.getElementById("editStatus");
+            let priority_op = document.getElementById("editPriority");
+            status_op.innerHTML="";
+            priority_op.innerHTML="";
+            //adding options for edit status input
+            for (let key in enumStatus) {
+                let option = document.createElement("option");
+                option.text = enumStatus[key].toUpperCase();
+                // console.log(typeof(enumStatus[key]));
+                option.value = enumStatus[key];
+               
+                if (enumStatus[key] == edit_obj._status) {
+                   
+                    option.setAttribute("selected", "selected");
+                }
+                status_op.appendChild(option);
+            }
+            //adding options for edit priority input
+
+            for (let key in enumPriority) {
+                let option = document.createElement("option");
+                option.text = enumPriority[key].toUpperCase();
+                option.value = enumPriority[key];
+                if (enumPriority[key] == edit_obj._priority) {
+                    option.setAttribute("selected", "selected");
+                }
+                priority_op.appendChild(option);
+            }
+
+            document.getElementById("editForm").style.display = "block";
+
+        }
+
+
+
+
+    </script>
 
 
 
 
 
-        <!-- here we have tasklis structure -->
-    <!-- <tr>
-        <td scope="row" id="tid">1</td>
-        <td id="tTitle">Mark</td>
-        <td id="tStatus">Done</td>
-        <td id="tPriority">Low</td>
-        <td id="tEdit"><button id="btnEdit" class="btn btn-warning">Edit</button></td>
-        <td id="tDelete"><button id="btnDelete" class="btn btn-danger">Delete</button></td>
-    </tr> -->
+
 </body>
 
 </html>
