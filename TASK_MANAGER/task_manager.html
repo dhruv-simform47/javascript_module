@@ -209,8 +209,8 @@
         }
         function generateId() {
             let t_array = getTask();
-            if (task_array.length == 0) return 1;
-            return (Number(task_array[task_array.length - 1].id) + 1);
+            if (t_array.length == 0) return 1;
+            return (Number(t_array[t_array.length - 1].id) + 1);
         }
         function addTask() {
             task_array = getTask();   //here we have array of task objects
@@ -253,6 +253,8 @@
             document.getElementById("addForm").style.display = "block";
             let status_op = document.getElementById("addStatus");
             let priority_op = document.getElementById("addPriority");
+            status_op.innerHTML = "";
+priority_op.innerHTML = "";
             //adding options for status input
             for (let key in enumStatus) {
                 let option = document.createElement("option");
@@ -291,8 +293,8 @@
         <td>${obj.title}</td>
         <td>${obj._status}</td>
         <td>${obj._priority}</td>
-        <td>${obj.createdAt}</td>
-        <td>${obj.updatedAt}</td>
+        <td>${new Date(obj.createdAt).toLocaleString("en-IN")}</td>
+        <td>${new Date(obj.updatedAt).toLocaleString("en-IN")}</td>
         <td ><button  class="btn btn-warning" onclick="editTaskForm(${obj.id})">Edit</button></td>
         <td ><button  class="btn btn-danger" onclick="deleteTask(${obj.id})">Delete</button></td>
             `;
@@ -367,7 +369,29 @@
 
         }
 
+        function deleteTask(delid)
+        {
+            let count = 0;
+            task_array=getTask();
+            let pos = task_array.reduce((index, value) => {
 
+                if (value.id == delid) {
+                    index = count;
+                }
+                else {
+                    count++;
+                }
+                return index;
+
+            }, -1);
+            if (pos == -1) {
+                throw new Error("Item To be Updated is not Stored!");
+            }
+            task_array.splice(pos,1);
+            localStorage.setItem(task_key,JSON.stringify(task_array));
+            console.log("element deleted");
+            showTaskPage();
+        }
 
 
     </script>
